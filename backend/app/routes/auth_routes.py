@@ -26,3 +26,11 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
     if not db_user or not auth.verify_password(user.password, db_user.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     return {"message": "Login successful"}
+
+
+@router.post("/reset-password")
+def reset_password(data: schemas.ResetPassword, db: Session = Depends(get_db)):
+    user = crud.update_password(db, data.username, data.new_password)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"message": "Password updated successfully"}

@@ -11,3 +11,11 @@ def create_user(db: Session, username: str, password: str):
 
 def get_user(db: Session, username: str):
     return db.query(models.User).filter(models.User.username == username).first()
+
+def update_password(db: Session, username: str, new_password: str):
+    user = db.query(models.User).filter(models.User.username == username).first()
+    if user:
+        user.password = auth.hash_password(new_password)
+        db.commit()
+        return user
+    return None

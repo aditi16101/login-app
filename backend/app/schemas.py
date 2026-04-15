@@ -7,3 +7,7 @@ class UserCreate(BaseModel):
 class UserLogin(BaseModel):
     username: str
     password: str
+
+class ResetPassword(BaseModel):
+    username: str
+    new_password: str
