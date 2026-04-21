@@ -15,9 +15,14 @@ def get_db():
 @router.post("/register")
 def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     print("Register API HIT")
+
+    if user.password != user.confirm_password:
+        raise HTTPException(status_code=400, detail="Passwords do not match")
+
     existing = crud.get_user(db, user.username)
     if existing:
         raise HTTPException(status_code=400, detail="User already exists")
+
     return crud.create_user(db, user.username, user.password)
 
 @router.post("/login")

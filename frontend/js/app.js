@@ -1,16 +1,31 @@
-const API = "http://127.0.0.1:8000";
+// const API = "http://127.0.0.1:8000";
+const API = "http://127.0.0.1:8001";
 
 async function register() {
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirm_password").value;
 
-    await fetch(`${API}/register`, {
+    if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+    }
+
+    const res = await fetch(`${API}/register`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({username, password})
+        body: JSON.stringify({ username, password, confirm_password: confirmPassword })
     });
 
-    alert("Registered!");
+    const data = await res.json();
+
+    console.log(data);
+
+    if (res.ok) {
+        alert(data.message || "Registered!");
+    } else {
+        alert(data.detail || JSON.stringify(data));
+    }
 }
 
 async function login() {
